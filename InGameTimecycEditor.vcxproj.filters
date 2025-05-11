@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\lib">
+      <UniqueIdentifier>{b70461d2-c4d6-40d2-badb-6ece84fe0924}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lib\iv-sdk">
+      <UniqueIdentifier>{96a6e8cf-9acb-4466-9091-0caeeddb0d5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\EmbeddedFont.h">
@@ -53,6 +59,402 @@
     </ClInclude>
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_win32.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\audRadioAudioEntity.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\C_PcSave.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CAchievements.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CAERadioTrackManager.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CAnimManager.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CAudioZones.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CBaseDC.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CBuilding.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CCam.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CCamera.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CCheat.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CClock.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CCustomShaderEffectBase.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CCutsceneMgr.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CDraw.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CDrawCurvedWindowDC.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CDrawRadioHudTextDC.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CDrawRectDC.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CDrawSpriteDC.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CDrawSpriteUVDC.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CdStream.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CDynamicEntity.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CEntity.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CExplosion.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CFileLoader.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CFileMgr.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CFont.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CFrontEnd.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CGame.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CGameConfigReader.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CGameLogic.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CGangs.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CGarage.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CGenericGameStorage.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\cHandlingDataMgr.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CHudColours.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CInteriorInst.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CIplStore.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CMatrix.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CMenuManager.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CModelInfo.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CNetwork.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CObject.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CPad.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CPed.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CPedFactoryNY.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CPedType.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CPhysical.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CPickups.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CPlayerInfo.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CPool.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CPools.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CPopulation.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CProjectileInfo.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CQuadTreeNode.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CQuaternion.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CRadar.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CRect.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CRenderPhase.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CReplay.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CRestart.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CRGBA.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CShaderLib.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CShadows.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CSimpleTransform.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CSprite2d.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CStats.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CStore.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CStreaming.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CStuntJumpManager.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTask.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskComplexClimbLadder.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskComplexDie.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskComplexInWater.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskComplexMobileMakeCall.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskComplexNewGetInVehicle.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskComplexNM.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskComplexPlayerOnFoot.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskComplexPlayerSettingsTask.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskComplexWander.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskSimpleNMHighFall.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskSimpleNMJumpRollFromRoadVehicle.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTaskSimpleSidewaysDive.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CText.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTheScripts.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTheZones.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTimeCycle.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTimer.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CTxdStore.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CVector.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CVector2D.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CVehicle.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CVehicleFactoryNY.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CVisibilityPlugins.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CWanted.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CWeaponInfo.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CWeather.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\CWorld.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\eHudColour.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\ePadControls.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\eRadarSprite.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\eVehiclePart.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\fiDevice.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\fiPackfile.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\grcTexture.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\grcTextureFactory.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\Hooks.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\IVSDK.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\NewAddressSet.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\pgDictionary.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\phBound.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\phConstrainedCollider.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\phInstGta.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\rage.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\SkyDome.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\injector\assembly.hpp">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\injector\calling.hpp">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\injector\gvm\gvm.hpp">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\injector\gvm\translator.hpp">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\injector\hooking.hpp">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\injector\injector.hpp">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\injector\utility.hpp">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\Scripting\BaseScripting.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\Scripting\NativeHashes.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\Scripting\NativeInvoke.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\Scripting\Scripting.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\Scripting\ScriptingEnums.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\Scripting\ScriptingHelpers.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\Scripting\ScriptingTypes.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\Scripting\Types.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\Addresses.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\iv-sdk\audEngine.h">
+      <Filter>Header Files\lib\iv-sdk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

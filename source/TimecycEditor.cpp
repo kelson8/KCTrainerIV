@@ -1,10 +1,35 @@
 #include "TimecycEditor.h"
 
+// IVSDK
+//#pragma comment(lib, "version.lib")
+//#include <windows.h>
+//#include <stdint.h>
+//#include <string>
+//#include <list>
+//#include <d3dx9.h>
+#include "IVSDK.h"
+#include "injector/injector.hpp"
+//
+#include "Addresses.h"
+#include "Scripting/Scripting.h"
+#include "Hooks.h"
+
+
+// TODO Set this up with the IVSDK, make an ImGui test on GTA IV.
+// I have added IVSDK to this project and it seems to build with it.
+
+// Well I attempted to add IVSDK but it doesn't work anymore....
+// I give up on modding GTA 4....
+
+using namespace Scripting;
+
 void TimecycEditor::Initialize(const uint8_t *baseAddress)
 {
 	int32_t gameVersion;
 	Utils::GetGameVersion(gameVersion);
 
+	
+	// These addresses below look like they are the same as in the IVSDK, well some of them anyways.
 	switch(gameVersion)
 	{
 		case 1040:
@@ -434,16 +459,31 @@ void TimecycEditor::OnBeforeD3D9DeviceEndScene(IDirect3DDevice9 *d3d9Device)
 	if(mShowWindow)
 	{
 		DrawMainWindow();
+		// TODO Possibly re-use these
 		DrawSaveWindow();
 		DrawLoadWindow();
 		DrawSettingsWindow();
+#ifdef DISABLED_CODE
 		DrawSetParamForAllHoursAndWeathersWindow();
+#endif
 	}
 
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 }
+
+
+
+//int CurrentPlayerId()
+//{
+//	return CONVERT_INT_TO_PLAYERINDEX(GET_PLAYER_ID());
+//}
+
+//int currentPlayerChar()
+//{
+//
+//}
 
 void TimecycEditor::DrawMainWindow()
 {
@@ -452,442 +492,93 @@ void TimecycEditor::DrawMainWindow()
 	const char *weatherNames[NUM_WEATHERS - 1] = {"EXTRASUNNY", "SUNNY", "SUNNY_WINDY", "CLOUDY", "RAIN", "DRIZZLE", "FOGGY", "LIGHTNING"};
 	const char *weatherName = weatherNames[mSelectedWeather];
 
-	ImGui::Begin("Timecyc Editor 1.21", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus);
+	ImGui::Begin("KCNet IV ImGui", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus);
 	ImGui::SetWindowPos(mWindowPos);
 	ImGui::SetWindowSize(mWindowSize);
 
-	if(ImGui::BeginMenuBar())
-	{
-		if(ImGui::BeginMenu("Load"))
-		{
-			if(ImGui::MenuItem("timecyc.dat##Load"))
-			{
-				mTimeCycle->Load("pc/data/timecyc.dat", NULL, 0);
-				InitializeColors();
-			}
-			if(ImGui::MenuItem("Load From"))
-			{
-				mShowLoadWindow = true;
-			}
 
-			ImGui::EndMenu();
-		}
+	ImGui::Text("KCNet Test");
 
-		if(ImGui::BeginMenu("Save"))
-		{
-			if(ImGui::MenuItem("timecyc.dat##Save"))
-			{
-				mTimeCycle->Save("pc/data/timecyc.dat", NULL, 0);
-			}
+	//auto ped = CPlayerInfo::GetPlayerInfo(CWorld::PlayerInFocus)->m_pPlayerPed;
 
-			if(ImGui::MenuItem("Save As"))
-			{
-				mShowSaveWindow = true;
-			}
-
-			ImGui::EndMenu();
-		}
-
-		if(ImGui::BeginMenu("Settings"))
-		{
-			mShowSettingsWindow = true;
-
-			ImGui::EndMenu();
-		}
-
-		if(ImGui::BeginMenu("Tools"))
-		{
-			if(ImGui::MenuItem("Set Param For All Hours And Weathers"))
-			{
-				mShowSetParamForAllHoursAndWeathersWindow = true;
-			}
-
-			ImGui::EndMenu();
-		}
-
-		ImGui::EndMenuBar();
-	}
-
-	ImGui::Checkbox("Lock to Selected Time, Weather and Day", &mLockTimeAndWeather);
-	if(ImGui::IsItemEdited())
-	{
-		if(mLockTimeAndWeather)
-		{
-			*mTimerLength = 30000;
-		}
-		else
-		{
-			RELEASE_WEATHER();
-			*mTimerLength = 2000;
-		}
-	}
-
-	ImGui::Checkbox("Only Show Timecyc Times", &mOnlyTimecycTimes);
+	// TODO Figure out how to get this value
+	int playerPed;
+	GET_PLAYER_CHAR(CONVERT_INT_TO_PLAYERINDEX(GET_PLAYER_ID()), &playerPed);
 	
-	ImGui::NewLine();
+	int playerId = GET_PLAYER_ID();
+	
+	//auto playerChar = Scripting::GET_PLAYER_CHAR();
+	// Well these seem to break it..
+	//auto playerID = Scripting::GET_PLAYER_ID();
 
-	if(mOnlyTimecycTimes)
+	// I got this working!!!!
+	// Also I added a namespace for scripting in the top of this file.
+	if (ImGui::Button("Enable god mode"))
 	{
-		mSelectedHour = TimecycTimeIndexToGameTime(mSelectedHourIndex);
-
-		ImGui::Text("Time of Day");
-		ImGui::SliderInt("##Hour", &mSelectedHourIndex, 0, NUM_HOURS - 1, timeOfDayName);
+		//Scripting::SET_CHAR_PROOFS(ped, true, true, true, true, true);
+		//Scripting::SET_CHAR_PROOFS(playerID, true, true, true, true, true);
+		SET_CHAR_PROOFS(playerPed, true, true, true, true, true);
+		
 	}
-	else
+
+	if (ImGui::Button("Disable god mode"))
 	{
-		mSelectedHourIndex = GameTimeToTimecycTimeIndex(mSelectedHour);
-
-		std::stringstream label;
-		label << "Time of Day (Editing " << timeOfDayNames[mSelectedHourIndex] << ")";
-
-		ImGui::Text(label.str().c_str());
-		ImGui::SliderInt("##Hour", &mSelectedHour, 0, 23);
+		//Scripting::SET_CHAR_PROOFS(ped, true, true, true, true, true);
+		//Scripting::SET_CHAR_PROOFS(playerID, false, false, false, false, false);
+		SET_CHAR_PROOFS(playerPed, false, false, false, false, false);
 	}
 	
-	ImGui::SliderInt("##Minutes", &mSelectedMinutes, 0, 59);
-
-	
-	ImGui::Text("Day");
-
-	ImGui::SameLine();
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort) && ImGui::BeginTooltip())
-	{
-		ImGui::TextUnformatted("Affects Cloud Noise. Don't save your game if you mess with this");
-		ImGui::EndTooltip();
-	}
-
-	if(ImGui::Button("Skip One Day Forward"))
-	{
-		SET_TIME_ONE_DAY_FORWARD();
-	}
-	if(ImGui::Button("Skip One Day Back"))
-	{
-		SET_TIME_ONE_DAY_BACK();
-	}
-
-	ImGui::Text("Weather");
-	ImGui::SliderInt("##Weather", &mSelectedWeather, 0, NUM_WEATHERS - 2, weatherName);
-
-	ImGui::NewLine();
-
-	if(ImGui::CollapsingHeader("Lighting"))
-	{
-		ImGui::SeparatorText("Ambient Light 0");
-		{
-			ImGui::Text("Color");
-			ImGui::ColorEdit3("##Ambient Light 0 Color", mAmbient0ColorFloat4[mSelectedHourIndex][mSelectedWeather]);
-			Utils::Float4ToU32(mAmbient0ColorFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mAmbient0Color);
-
-			ImGui::Text("Multiplier");
-			ImGui::DragFloat("##Ambient Light 0 Multiplier", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mAmbient0Multiplier, 0.005f, 0.0f, FLT_MAX);
-		}
-		ImGui::SeparatorText("Ambient Light 1");
-		{
-			ImGui::Text("Color");
-			ImGui::ColorEdit3("##Ambient 1 Color", mAmbient1ColorFloat4[mSelectedHourIndex][mSelectedWeather]);
-			Utils::Float4ToU32(mAmbient1ColorFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mAmbient1Color);
-
-			ImGui::Text("Multiplier");
-			ImGui::DragFloat("##Ambient Light 1 Light Multiplier", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mAmbient1Multiplier, 0.005f, 0.0f, FLT_MAX);
-		}
-		ImGui::SeparatorText("Directional Light");
-		{
-			ImGui::Text("Color");
-			ImGui::ColorEdit3("##Directional Light Color", mDirLightColorFloat4[mSelectedHourIndex][mSelectedWeather]);
-			Utils::Float4ToU32(mDirLightColorFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDirLightColor);
-
-			ImGui::Text("Multiplier");
-			ImGui::DragFloat("##Directional Light multitplier", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDirLightMultiplier, 0.005f, 0.0f, FLT_MAX);
-
-			ImGui::Text("Specular Multiplier");
-			ImGui::DragFloat("##Directional Light Specular Multiplier", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDirLightSpecMultiplier, 0.005f, 0.0f, FLT_MAX);
-		}
-		ImGui::SeparatorText("Water");
-		{
-			ImGui::Text("Color");
-			ImGui::ColorEdit4("##Water Color", mWaterFloat4[mSelectedHourIndex][mSelectedWeather]);
-			Utils::Float4ToU32(mWaterFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mWater);
-
-			ImGui::Text("Reflection Multiplier");
-			ImGui::DragFloat("##Water Reflection Multiplier", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mWaterReflectionMultiplier, 0.005f, 0.0f, FLT_MAX);
-		}
-		ImGui::SeparatorText("");
-
-		ImGui::Text("Rim Lighting Multiplier");
-		ImGui::DragFloat("##Rim Lighting Multiplier", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mRimLightingMultiplier, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Sky Light Multiplier");
-		ImGui::DragFloat("##Sky Light Multiplier", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSkyLightMultiplier, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Global Reflection Multiplier");
-		ImGui::DragFloat("##Global Reflection Multiplier", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mGlobalReflectionMultiplier, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("AO Strength");
-		ImGui::DragFloat("##AO Strength", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mAOStrength, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Ped AO Strength");
-		ImGui::DragFloat("##Ped AO Strength", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mPedAOStrength, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Corona Size");
-		ImGui::DragFloat("##Corona Size", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCoronaSize, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Corona Brightness");
-		ImGui::DragFloat("##Corona Brightness", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCoronaBrightness, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Distant Corona Size");
-		ImGui::DragFloat("##Distant Corona Size", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDistantCoronaSize, 0.05f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Distant Corona Brightness");
-		ImGui::DragFloat("##Distant Corona Brightness", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDistantCoronaBrightness, 0.05f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Particle Brightness");
-		ImGui::DragFloat("##Particle Brightness", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mParticleBrightness, 0.005f, 0.0f, FLT_MAX);
-	}
-	
-	if(ImGui::CollapsingHeader("Atmosphere"))
-	{
-		ImGui::Text("Temperature");
-		ImGui::DragFloat("##Temperature", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mTemperature, 0.1f);
-
-		if(ImGui::TreeNode("Fog"))
-		{
-			ImGui::Text("Start");
-			ImGui::DragFloat("##Fog Start", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mFogStart, 0.5f);
-
-			ImGui::Text("Density");
-			ImGui::DragFloat("##Fog Density", &mSkyBottomColorFogDensityFloat4[mSelectedHourIndex][mSelectedWeather][3], 0.005f, 0.0f, 1.0f);
-			Utils::Float4ToU32(mSkyBottomColorFogDensityFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSkyBottomColorFogDensity);
-
-			ImGui::TreePop();
-		}
-		if(ImGui::TreeNode("Sky"))
-		{
-			ImGui::Text("Brightness");
-			ImGui::DragFloat("##Sky Brightness", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSkyBrightness, 0.005f, 0.0f, FLT_MAX);
-
-			ImGui::Text("Bottom Color");
-			ImGui::ColorEdit3("##Sky Bottom Color", mSkyBottomColorFogDensityFloat4[mSelectedHourIndex][mSelectedWeather]);
-			Utils::Float4ToU32(mSkyBottomColorFogDensityFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSkyBottomColorFogDensity);
-
-			ImGui::Text("Top Color");
-			ImGui::ColorEdit3("##Sky Top Color", mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSkyColor, ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float);
-
-			ImGui::Text("East Horizon Color");
-			ImGui::ColorEdit3("##Sky East Horizon Color", mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSkyHorizonColor, ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float);
-
-			ImGui::Text("West Horizon Color");
-			ImGui::ColorEdit3("##Sky West Horizon Color", mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSkyEastHorizonColor, ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float);
-
-			ImGui::Text("Horizon Brightness");
-			ImGui::DragFloat("##Sky East Horizon Brightness", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSkyHorizonBrightness, 0.005f, 0.0f, FLT_MAX);
-
-			ImGui::Text("Horizon Height Fade Out");
-			ImGui::DragFloat("##Sky Horizon Height Fade Out", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSkyHorizonHeight, 0.05f, 0.0f, FLT_MAX);
-
-			ImGui::NewLine();
-
-			ImGui::Text("Sun Color");
-			ImGui::ColorEdit3("##Sun Color", mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSunColor, ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float);
-			
-			ImGui::Text("Sun Size");
-			ImGui::DragFloat("##Sun Size", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSunSize, 0.001f, 0.0f, FLT_MAX);
-
-			ImGui::TreePop();
-		}
-		if(ImGui::TreeNode("Clouds"))
-		{
-			ImGui::Text("Color 1");
-			ImGui::ColorEdit3("##Cloud Color 1", mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud1Color, ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float);
-
-			ImGui::Text("Color 2");
-			ImGui::ColorEdit3("##Cloud Color 2", mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud2Color, ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float);
-
-			ImGui::Text("Color 3");
-			ImGui::ColorEdit3("##Cloud 3 Color", mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud3Color, ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float);
-
-			ImGui::Text("Brightness");
-			ImGui::DragFloat("##Cloud Brightness", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloudsBrightness, 0.05f, 0.0f, FLT_MAX);
-
-			ImGui::Text("Height Fade Out");
-			ImGui::DragFloat("##Clouds Fade Out", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloudsFadeOut, 0.05f, 0.0f, FLT_MAX);
-
-			ImGui::SeparatorText("Detail Noise");
-			{
-				ImGui::Text("Scale");
-				ImGui::DragFloat("##Detail Noise Scale", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDetailNoiseScale, 0.5f, 0.0f, FLT_MAX);
-
-				ImGui::Text("Offset/Scrolling Speed");
-				ImGui::DragFloat("##Detail Noise Offset", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDetailNoiseOffset, 0.05f);
-
-				ImGui::Text("Multiplier");
-				ImGui::DragFloat("##Detail Noise Multiplier", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDetailNoiseMultiplier, 0.005f, FLT_MIN, FLT_MAX);
-			}
-
-			ImGui::SeparatorText("Clouds 1");
-			{
-				ImGui::Text("Threshold");
-				ImGui::DragFloat("##Clouds 1 Threshold", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud1Threshold, 0.005f, 0.0f, FLT_MAX);
-
-				ImGui::Text("Bias");
-				ImGui::DragFloat("##Clouds 1 Bias", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud1Bias, 0.005f,	0.0f, FLT_MAX);
-
-				ImGui::Text("Detail");
-				ImGui::DragFloat("##Clouds 1 Detail", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud1Detail, 0.005f, 0.0f, FLT_MAX);
-
-				ImGui::Text("Height");
-				ImGui::DragFloat("##Clouds 1 Height", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud1Height, 0.005f, 0.0f, FLT_MAX);
-			}
-			ImGui::SeparatorText("Clouds 2");
-			{
-				ImGui::Text("Threshold");
-				ImGui::DragFloat("##Clouds 2 Threshold", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud2Threshold, 0.005f, 0.0f, FLT_MAX);
-
-				ImGui::Text("Bias 1");
-				ImGui::DragFloat("##Clouds 2 Bias 1", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud2Bias1, 0.005f, 0.0f, FLT_MAX);
-
-				ImGui::Text("Bias 2");
-				ImGui::DragFloat("##Clouds 2 Bias 2", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud2Bias2, 0.005f, 0.0f, FLT_MAX);
-
-				ImGui::Text("Scale");
-				ImGui::DragFloat("##Clouds 2 Scale", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud2Scale, 0.005f, 0.0f, FLT_MAX);
-
-				ImGui::Text("Softness");
-				ImGui::DragFloat("##Clouds 2 Softness", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud2Offset, 0.005f, 0.0f, FLT_MAX);
-
-				ImGui::Text("Shadow Strength");
-				ImGui::DragFloat("##Clouds 2 Shadow Strength", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloud2ShadowStrength, 0.005f, 0.0f, 1.0f);
-			}
-
-			ImGui::TreePop();
-		}
-
-		if(ImGui::TreeNode("Night Sky"))
-		{
-			ImGui::Text("Visible Stars");
-			ImGui::DragFloat("##Visible Stars", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mVisibleStars, 0.005f, 0.0f, FLT_MAX);
-
-			ImGui::Text("Star Field Brightness");
-			ImGui::DragFloat("##Star Field Brightness", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mStarsBrightness, 0.005f, 0.0f, FLT_MAX);
-
-			ImGui::NewLine();
-
-			ImGui::Text("Moon Color");
-			ImGui::ColorEdit3("##Moon Color", mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mMoonColor, ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float);
-
-			ImGui::Text("Moon Brightness");
-			ImGui::DragFloat("##Moon Brightness", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mMoonBrightness, 0.001f, 0.0f, FLT_MAX);
-
-			ImGui::Text("Moon Glow");
-			ImGui::DragFloat("##Moon Glow", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mMoonGlow, 0.005f, 0.0f, FLT_MAX);
-
-			ImGui::Text("Unknown");
-			ImGui::DragFloat("##Moon Unknown", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mMoonParam3, 0.015f);
-
-			ImGui::TreePop();
-		}
-	}
-
-	if(ImGui::CollapsingHeader("Post Processing"))
-	{
-		ImGui::Text("Film Grain");
-		ImGui::DragInt("##Film Grain", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mFilmGrain, 0.5f, 0, INT32_MAX);
-
-		ImGui::Text("Luminance Min");
-		ImGui::DragFloat("##Luminance Min", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mLumMin, 0.005f, 0.0f, mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mLumMax);
-
-		ImGui::Text("Luminance Max");
-		ImGui::DragFloat("##Luminance Max", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mLumMax, 0.005f, mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mLumMin, FLT_MAX);
-
-		ImGui::Text("Luminance Delay");
-		ImGui::DragFloat("##Luminance Delay", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mLumDelay, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Exposure");
-		ImGui::DragFloat("##Exposure", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mExposure, 0.001f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Color Correction");
-		ImGui::ColorEdit3("##Color Correction", mColorCorrectionFloat4[mSelectedHourIndex][mSelectedWeather]);
-		Utils::Float4ToU32(mColorCorrectionFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mColorCorrection);
-
-		ImGui::Text("Color Add");
-		ImGui::ColorEdit3("##Color Add", mColorAddFloat4[mSelectedHourIndex][mSelectedWeather]);
-		Utils::Float4ToU32(mColorAddFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mColorAdd);
-
-		ImGui::Text("Bloom Threshold");
-		ImGui::DragFloat("##Bloom Threshold", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mBloomThreshold, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Bloom Intensity");
-		ImGui::DragFloat("##Bloom Intensity", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mBloomIntensity, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Mid Gray Value");
-		ImGui::DragFloat("##Mid Gray Value", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mMidGrayValue, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Desaturation");
-		ImGui::DragFloat("##Desaturation", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDesaturation, 0.005f, 0.0f, 1.0f);
-
-		ImGui::Text("Desaturation Far");
-		ImGui::DragFloat("##Desaturation Far", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDesaturationFar, 0.005f, 0.0f, 1.0f);
-
-		ImGui::Text("Gamma");
-		ImGui::DragFloat("##Gamma", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mGamma, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Gamma Far");
-		ImGui::DragFloat("##Gamma Far", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mGammaFar, 0.005f, 0.0f, FLT_MAX);
-
-		ImGui::Text("DepthFX Near");
-		ImGui::DragFloat("##DepthFX Near", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDepthFxNear, 0.5f, 0.0f, mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDepthFxFar);
-
-		ImGui::Text("DepthFX Far");
-		ImGui::DragFloat("##DepthFX Far", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDepthFxFar, 0.5f, mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDepthFxNear, FLT_MAX);
-
-		ImGui::Text("DOF Start");
-		ImGui::DragFloat("##DOF Start", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mDOFStart, 0.5f, 0.0f, FLT_MAX);
-
-		ImGui::Text("Near DOF Blur");
-		ImGui::DragFloat("##Near DOF Blur", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mNearDOFBlur, 0.005f, 0.0f, mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mFarDOFBlur);
-
-		ImGui::Text("Far DOF Blur");
-		ImGui::DragFloat("##Far DOF Blur", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mFarDOFBlur, 0.005f, mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mNearDOFBlur, 1.0f);
-	}
-
-	if(ImGui::CollapsingHeader("Other"))
-	{
-		ImGui::Text("Far Clip");
-		ImGui::DragFloat("##Far Clip", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mFarClip, 0.5f, 0.0f, FLT_MAX);
-	}
-
-	if(ImGui::CollapsingHeader("(Probably) Unused"))
-	{
-		ImGui::Text("Contrast Far");
-		ImGui::DragFloat("##Contrast Far", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mContrastFar, 0.1f);
-
-		ImGui::Text("Contrast");
-		ImGui::DragFloat("##Contrast", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mContrast, 0.1f);
-
-		ImGui::Text("Low clouds Color");
-		ImGui::ColorEdit3("##Low clouds Color", mLowCloudsColorFloat4[mSelectedHourIndex][mSelectedWeather]);
-		Utils::Float4ToU32(mLowCloudsColorFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mLowCloudsColor);
-
-		ImGui::Text("Bottom clouds Color");
-		ImGui::ColorEdit3("##Bottom clouds Color", mBottomCloudsColorFloat4[mSelectedHourIndex][mSelectedWeather]);
-		Utils::Float4ToU32(mBottomCloudsColorFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mBottomCloudsColor);
-
-		ImGui::Text("Cloud alpha");
-		ImGui::DragInt("##Cloud alpha", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mCloudAlpha);
-
-		ImGui::Text("Sun core");
-		ImGui::ColorEdit3("##Sun Core", mSunCoreFloat4[mSelectedHourIndex][mSelectedWeather]);
-		Utils::Float4ToU32(mSunCoreFloat4[mSelectedHourIndex][mSelectedWeather], mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mSunCore);
-
-		ImGui::Text("Unknown 3");
-		ImGui::DragFloat("##Unknown 3", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mUnknown11C, 0.1f);
-
-		ImGui::Text("Unknown 29");
-		ImGui::DragFloat("##Unknown 29", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mUnknown190, 0.1f);
-
-		ImGui::Text("Unknown 46");
-		ImGui::DragFloat("##Unknown 46", &mTimeCycle->mParams[mSelectedHourIndex][mSelectedWeather].mUnknown200, 0.1f);
-	}
+	//if(ImGui::BeginMenuBar())
+	//{
+	//	if(ImGui::BeginMenu("Load"))
+	//	{
+	//		if(ImGui::MenuItem("timecyc.dat##Load"))
+	//		{
+	//			mTimeCycle->Load("pc/data/timecyc.dat", NULL, 0);
+	//			InitializeColors();
+	//		}
+	//		if(ImGui::MenuItem("Load From"))
+	//		{
+	//			mShowLoadWindow = true;
+	//		}
+
+	//		ImGui::EndMenu();
+	//	}
+
+	//	if(ImGui::BeginMenu("Save"))
+	//	{
+	//		if(ImGui::MenuItem("timecyc.dat##Save"))
+	//		{
+	//			mTimeCycle->Save("pc/data/timecyc.dat", NULL, 0);
+	//		}
+
+	//		if(ImGui::MenuItem("Save As"))
+	//		{
+	//			mShowSaveWindow = true;
+	//		}
+
+	//		ImGui::EndMenu();
+	//	}
+
+	//	if(ImGui::BeginMenu("Settings"))
+	//	{
+	//		mShowSettingsWindow = true;
+
+	//		ImGui::EndMenu();
+	//	}
+
+	//	if(ImGui::BeginMenu("Tools"))
+	//	{
+	//		if(ImGui::MenuItem("Set Param For All Hours And Weathers"))
+	//		{
+	//			mShowSetParamForAllHoursAndWeathersWindow = true;
+	//		}
+
+	//		ImGui::EndMenu();
+	//	}
+
+	//	ImGui::EndMenuBar();
+	//}
 	
 	ImGui::End();
 }
@@ -1061,6 +752,7 @@ void TimecycEditor::DrawSettingsWindow()
 	}
 }
 
+#ifdef DISABLED_CODE
 void TimecycEditor::DrawSetParamForAllHoursAndWeathersWindow()
 {
 	if(mShowSetParamForAllHoursAndWeathersWindow)
@@ -1177,6 +869,7 @@ void TimecycEditor::DrawSetParamForAllHoursAndWeathersWindow()
 		ImGui::End();
 	}
 }
+#endif //DISABLED_CODE
 
 int32_t TimecycEditor::TimecycTimeIndexToGameTime(const int32_t timeIndex)
 {

@@ -43,7 +43,9 @@ private:
 	void DrawSaveWindow();
 	void DrawLoadWindow();
 	void DrawSettingsWindow();
+#ifdef DISABLED_CODE
 	void DrawSetParamForAllHoursAndWeathersWindow();
+#endif //DISABLED_CODE
 
 	int32_t TimecycTimeIndexToGameTime(const int32_t timeIndex);
 	int32_t GameTimeToTimecycTimeIndex(const int32_t gameTime);
@@ -96,7 +98,8 @@ private:
 	bool mShowSettingsWindow = false;
 	bool mShowSetParamForAllHoursAndWeathersWindow = false;
 
-	ImGuiKey mOpenWindowKey = ImGuiKey_F9;
+	//ImGuiKey mOpenWindowKey = ImGuiKey_F9;
+	ImGuiKey mOpenWindowKey = ImGuiKey_F5;
 	ImVec2 mWindowPos = ImVec2(5.0f, 5.0f);
 	ImVec2 mWindowSize = ImVec2(440.0f, 650.0f);
 	float mItemInnerSpacing = 4.0f;
