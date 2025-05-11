@@ -1,5 +1,9 @@
 #define WIN32_LEAN_AND_MEAN
 
+#include <fstream>
+#include <iostream>
+
+
 // Credit to this project on GitHub for the original source: 
 // https://github.com/akifle47/InGameTimecycEditor
 
@@ -29,6 +33,40 @@ WNDPROC WndProcO = nullptr;
 KCTrainerIV kcTrainerIV;
 
 HANDLE gMainThreadHandle = nullptr;
+
+// TODO Setup a lua loader with this also, or use this as a base for one.
+
+/// <summary>
+/// Runs a console window for cout and other errors to be displayed
+/// Also print from ImGui into the console.
+/// </summary>
+void AttachConsole()
+{
+#ifdef _WIN32
+	if (AllocConsole())
+	{
+		// Redirect standard output, error, and input streams to the console
+		FILE* dummy;
+		freopen_s(&dummy, "CONOUT$", "w", stdout);
+		freopen_s(&dummy, "CONOUT$", "w", stderr);
+		freopen_s(&dummy, "CONIN$", "r", stdin);
+
+		// Optional: Set the console title
+		SetConsoleTitle(L"KCTrainerIV");
+
+		std::cout << "Console attached successfully!" << std::endl;
+		//std::cerr << "Error output will also appear here." << std::endl;
+	}
+	else
+	{
+		// Handle the case where console allocation fails (unlikely in most scenarios)
+		// You might want to log an error message using your in-game system.
+		std::cerr << "Failed to allocate console." << std::endl;
+	}
+#else
+	std::cerr << "AllocConsole() is only available on Windows." << std::endl;
+#endif
+}
 
 //Function Hooks
 
@@ -167,6 +205,10 @@ bool Initialize()
 
 				return false;
 			}
+
+			// This works! Attach a console like in my GTA SA lua mod.
+			// TODO Add config option for this when I add one for the menu key.
+			AttachConsole();
 
 			Log::Info("Created IDirectInputDevice8::Acquire hook");
 		}

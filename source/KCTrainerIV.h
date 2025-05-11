@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <fstream>
 #include <sstream>
@@ -34,7 +35,7 @@ public:
 
 private:
 	void InitializeImGui(IDirect3DDevice9 *d3d9Device);
-	void InitializeColors();
+	
 
 	void SaveSettings();
 	void LoadSettings();
@@ -42,6 +43,8 @@ private:
 	void DrawMainWindow();
 
 #ifdef DISABLED_CODE
+	void InitializeColors();
+
 	void DrawSaveWindow();
 	void DrawLoadWindow();
 	void DrawSettingsWindow();

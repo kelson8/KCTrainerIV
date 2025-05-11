@@ -1,9 +1,19 @@
 // Credit to this project on GitHub for the original source: 
 // https://github.com/akifle47/InGameTimecycEditor
 
+// These trainers can be used as a reference for a guide to some of the Natives:
+// Three Socks Trainer: https://github.com/Three-Socks/GTAIV-Trainer
+// XMC Trainer: https://github.com/EmmanuelU/xmc-mod-menu
+
 //#include "TimecycEditor.h"
 #include "KCTrainerIV.h"
 
+#include <iostream>
+
+// TODO Figure out how to fix linker errors when 
+// using the PlayerMenu or other files.
+
+// Seems like something in the IVSDK is causing this.
 
 
 // IVSDK
@@ -13,6 +23,8 @@
 //#include <string>
 //#include <list>
 //#include <d3dx9.h>
+
+
 #include "IVSDK.h"
 #include "injector/injector.hpp"
 //
@@ -22,15 +34,19 @@
 
 #define IMGUIBUTTON ImGui::Button
 
+void EnablePlayerControl();
+
 // I renamed most variables and objects from TimecycEditor to KCTrainerIV, including in the header and main.cpp.
-
-
 
 // TODO Set this up with the IVSDK, make an ImGui test on GTA IV.
 // I have added IVSDK to this project and it seems to build with it.
 
 using namespace Scripting;
 
+/// <summary>
+/// Initialize some of the memory addresses, these can now be obtained from the IVSDK.
+/// </summary>
+/// <param name="baseAddress">Base address of GTAIV.exe</param>
 void KCTrainerIV::Initialize(const uint8_t *baseAddress)
 {
 	int32_t gameVersion;
@@ -85,92 +101,106 @@ void KCTrainerIV::Initialize(const uint8_t *baseAddress)
 		break;
 	}
 	
-	LoadSettings();
-	mTimeCycle->Load("pc/data/timecyc.dat", NULL, 0);
-	InitializeColors();
-
-	mTimecycParamNameOffsetAndType[0] = {"Ambient Color 0", 0x0, TIMECYCPARAMTYPE_COLOR_U32};
-	mTimecycParamNameOffsetAndType[1] = {"Ambient Color 1", 0x4, TIMECYCPARAMTYPE_COLOR_U32};
-	mTimecycParamNameOffsetAndType[2] = {"Directional Light Color 1", 0x8, TIMECYCPARAMTYPE_COLOR_U32};
-	mTimecycParamNameOffsetAndType[3] = {"Directional Light Color Multiplier", 0xC, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[4] = {"Ambient Color 0 Multiplier", 0x10, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[5] = {"Ambient Color 1 Multiplier", 0x14, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[6] = {"AO Strength", 0x18, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[7] = {"Ped AO Strength", 0x1C, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[8] = {"Rim Lighting Multiplier", 0x20, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[9] = {"Sky Light Multiplier", 0x24, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[10] = {"Sky Bottom Color And Fog Density", 0x2C, TIMECYCPARAMTYPE_COLOR_U32};
-	mTimecycParamNameOffsetAndType[11] = {"Sun Core", 0x30, TIMECYCPARAMTYPE_COLOR_U32};
-	mTimecycParamNameOffsetAndType[12] = {"Corona Brightness", 0x34, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[13] = {"Corona Size", 0x3C, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[14] = {"Distant Corona Brightness", 0x40, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[15] = {"Far Clip", 0x44, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[16] = {"Fog Start", 0x48, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[17] = {"DOF Start", 0x4C, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[18] = {"Near DOF Blur", 0x50, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[19] = {"Far DOF Blur", 0x54, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[20] = {"Far DOF Blur", 0x54, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[21] = {"Low Clouds Color", 0x58, TIMECYCPARAMTYPE_COLOR_U32};
-	mTimecycParamNameOffsetAndType[22] = {"Bottom Clouds Color", 0x5C, TIMECYCPARAMTYPE_COLOR_U32};
-	mTimecycParamNameOffsetAndType[23] = {"Water", 0x60, TIMECYCPARAMTYPE_COLOR_U32};
-	mTimecycParamNameOffsetAndType[24] = {"Water Reflection Multiplier", 0x80, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[25] = {"Particle Brightness", 0x84, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[26] = {"Exposure", 0x88, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[27] = {"Bloom Threshold", 0x8C, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[28] = {"Mid Gray Value", 0x90, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[29] = {"Bloom Intensity", 0x94, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[30] = {"Color Correction", 0x98, TIMECYCPARAMTYPE_COLOR_U32};
-	mTimecycParamNameOffsetAndType[31] = {"Color Add", 0x9C, TIMECYCPARAMTYPE_COLOR_U32};
-	mTimecycParamNameOffsetAndType[32] = {"Desaturation", 0xA0, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[33] = {"Contrast", 0xA4, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[34] = {"Gamma", 0xA8, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[35] = {"Desaturation Far", 0xAC, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[36] = {"Contrast Far", 0xB0, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[37] = {"Gamma Far", 0xB4, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[38] = {"DepthFX Near", 0xB8, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[39] = {"DepthFX Far", 0xBC, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[40] = {"Luminance Min", 0xC0, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[41] = {"Luminance Max", 0xC4, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[42] = {"Luminance Delay", 0xC8, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[43] = {"Cloud Alpha", 0xCC, TIMECYCPARAMTYPE_INT};
-	mTimecycParamNameOffsetAndType[44] = {"Temperature", 0xD4, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[45] = {"Global Reflection Multiplier", 0xD8, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[46] = {"Sky Color", 0xE4, TIMECYCPARAMTYPE_COLOR_FLOAT3};
-	mTimecycParamNameOffsetAndType[47] = {"Sky Horizon Color", 0xF4, TIMECYCPARAMTYPE_COLOR_FLOAT3};
-	mTimecycParamNameOffsetAndType[48] = {"Sky East Horizon Color", 0x104, TIMECYCPARAMTYPE_COLOR_FLOAT3};
-	mTimecycParamNameOffsetAndType[49] = {"Cloud 1 Color", 0x114, TIMECYCPARAMTYPE_COLOR_FLOAT3};
-	mTimecycParamNameOffsetAndType[50] = {"Sky Horizon Height", 0x120, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[51] = {"Sky Horizon Brightness", 0x124, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[52] = {"Cloud 2 Color", 0x134, TIMECYCPARAMTYPE_COLOR_FLOAT3};
-	mTimecycParamNameOffsetAndType[53] = {"Cloud 2 Shadow Strength", 0x140, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[54] = {"Cloud 2 Threshold", 0x144, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[55] = {"Cloud 2 Bias 1", 0x148, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[56] = {"Cloud 2 Scale", 0x14C, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[57] = {"Cloud In Scattering", 0x150, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[58] = {"Cloud 2 Bias 2", 0x154, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[59] = {"Detail Noise Scale", 0x158, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[60] = {"Detail Noise Multiplier", 0x15C, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[61] = {"Cloud 2 Offset", 0x160, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[62] = {"Clouds Fadeout", 0x168, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[63] = {"Cloud 1 Bias", 0x16C, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[64] = {"Cloud 1 Detail", 0x170, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[65] = {"Cloud 1 Threshold", 0x174, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[66] = {"Cloud 1 Height", 0x178, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[67] = {"Cloud 3 Color", 0x184, TIMECYCPARAMTYPE_COLOR_FLOAT3};
-	mTimecycParamNameOffsetAndType[68] = {"Sun Color", 0x1A4, TIMECYCPARAMTYPE_COLOR_FLOAT3};
-	mTimecycParamNameOffsetAndType[69] = {"Clouds Brightness", 0x1B0, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[70] = {"Detail Noise Offset", 0x1B4, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[71] = {"Stars Brightness", 0x1B8, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[72] = {"Visible Stars", 0x1BC, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[73] = {"Moon Brightness", 0x1C0, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[74] = {"Moon Color", 0x1D4, TIMECYCPARAMTYPE_COLOR_FLOAT3};
-	mTimecycParamNameOffsetAndType[75] = {"Moon Glow", 0x1E0, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[76] = {"Moon Unknown", 0x1E4, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[77] = {"Sun Size", 0x1F0, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[78] = {"Sky Brightness", 0x204, TIMECYCPARAMTYPE_FLOAT};
-	mTimecycParamNameOffsetAndType[79] = {"Film Grain", 0x20C, TIMECYCPARAMTYPE_INT};
+	// TODO Fix up for menu loading/saving
+	//LoadSettings();
 }
 
+//------------------ ImGui Setup ------------------/
+
+/// <summary>
+/// Setup the ImGui style
+/// </summary>
+/// <param name="io">The IO for ImGui</param>
+void SetupImGuiStyle(ImGuiIO &io)
+{
+	io.IniFilename = NULL;
+
+	//ImGui Style
+	{
+		ImGuiStyle* style = &ImGui::GetStyle();
+		style->FrameRounding = 1;
+		style->WindowPadding.x = 50;
+		style->WindowPadding.y = 10;
+		style->FramePadding.x = 1;
+		style->FramePadding.y = 3;
+		style->ItemSpacing.x = 10;
+		style->ItemSpacing.x = 5;
+		style->ScrollbarSize = 20;
+		style->ScrollbarRounding = 1;
+		style->GrabMinSize = 15;
+
+		style->WindowBorderSize = 0;
+		style->WindowRounding = 1;
+
+		style->WindowTitleAlign.x = 0.5;
+		style->WindowTitleAlign.y = 0.5;
+		style->WindowMenuButtonPosition = 0;
+
+		style->SeparatorTextBorderSize = 3;
+	}
+	//ImGui Color
+	{
+		ImVec4* colors = ImGui::GetStyle().Colors;
+		colors[ImGuiCol_Text] = ImVec4(0.94f, 0.94f, 0.94f, 1.00f);
+		colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+		colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.06f, 0.98f);
+		colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+		colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+		colors[ImGuiCol_Border] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
+		colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+		colors[ImGuiCol_FrameBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+		colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.24f, 0.24f, 1.00f);
+		colors[ImGuiCol_FrameBgActive] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
+		colors[ImGuiCol_TitleBg] = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
+		colors[ImGuiCol_TitleBgActive] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+		colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
+		colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+		colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
+		colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
+		colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
+		colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
+		colors[ImGuiCol_CheckMark] = ImVec4(0.84f, 0.84f, 0.84f, 1.00f);
+		colors[ImGuiCol_SliderGrab] = ImVec4(0.43f, 0.43f, 0.43f, 1.00f);
+		colors[ImGuiCol_SliderGrabActive] = ImVec4(0.47f, 0.47f, 0.47f, 1.00f);
+		colors[ImGuiCol_Button] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
+		colors[ImGuiCol_ButtonHovered] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
+		colors[ImGuiCol_ButtonActive] = ImVec4(0.45f, 0.45f, 0.45f, 1.00f);
+		colors[ImGuiCol_Header] = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);
+		colors[ImGuiCol_HeaderHovered] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		colors[ImGuiCol_HeaderActive] = ImVec4(0.24f, 0.24f, 0.24f, 1.00f);
+		colors[ImGuiCol_Separator] = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
+		colors[ImGuiCol_SeparatorHovered] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
+		colors[ImGuiCol_SeparatorActive] = ImVec4(0.22f, 0.22f, 0.22f, 1.00f);
+		colors[ImGuiCol_ResizeGrip] = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+		colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.72f, 0.72f, 0.72f, 1.00f);
+		colors[ImGuiCol_ResizeGripActive] = ImVec4(0.77f, 0.77f, 0.77f, 1.00f);
+		colors[ImGuiCol_Tab] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+		colors[ImGuiCol_TabHovered] = ImVec4(0.22f, 0.22f, 0.22f, 1.00f);
+		colors[ImGuiCol_TabActive] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
+		colors[ImGuiCol_TabUnfocused] = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
+		colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
+		colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+		colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+		colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+		colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+		colors[ImGuiCol_TableHeaderBg] = ImVec4(0.19f, 0.19f, 0.20f, 1.00f);
+		colors[ImGuiCol_TableBorderStrong] = ImVec4(0.31f, 0.31f, 0.35f, 1.00f);
+		colors[ImGuiCol_TableBorderLight] = ImVec4(0.23f, 0.23f, 0.25f, 1.00f);
+		colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+		colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
+		colors[ImGuiCol_TextSelectedBg] = ImVec4(0.43f, 0.43f, 0.43f, 0.98f);
+		colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
+		colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+		colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+	}
+}
+
+/// <summary>
+/// Initialize and setup ImGui if not already initialized, otherwise do nothing.
+/// </summary>
+/// <param name="d3d9Device"></param>
 void KCTrainerIV::InitializeImGui(IDirect3DDevice9 *d3d9Device)
 {
 	if(!mIsImGuiInitialized)
@@ -181,89 +211,8 @@ void KCTrainerIV::InitializeImGui(IDirect3DDevice9 *d3d9Device)
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO &io = ImGui::GetIO(); (void)io;
-		
-		io.IniFilename = NULL;
-		
-		//ImGui Style
-		{
-			ImGuiStyle *style = &ImGui::GetStyle();
-			style->FrameRounding = 1;
-			style->WindowPadding.x = 50;
-			style->WindowPadding.y = 10;
-			style->FramePadding.x = 1;
-			style->FramePadding.y = 3;
-			style->ItemSpacing.x = 10;
-			style->ItemSpacing.x = 5;
-			style->ScrollbarSize = 20;
-			style->ScrollbarRounding = 1;
-			style->GrabMinSize = 15;
 
-			style->WindowBorderSize = 0;
-			style->WindowRounding = 1;
-
-			style->WindowTitleAlign.x = 0.5;
-			style->WindowTitleAlign.y = 0.5;
-			style->WindowMenuButtonPosition = 0;
-
-			style->SeparatorTextBorderSize = 3;
-		}
-		//ImGui Color
-		{
-			ImVec4 *colors = ImGui::GetStyle().Colors;
-			colors[ImGuiCol_Text] = ImVec4(0.94f, 0.94f, 0.94f, 1.00f);
-			colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-			colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.06f, 0.98f);
-			colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-			colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-			colors[ImGuiCol_Border] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
-			colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-			colors[ImGuiCol_FrameBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-			colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.24f, 0.24f, 1.00f);
-			colors[ImGuiCol_FrameBgActive] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-			colors[ImGuiCol_TitleBg] = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
-			colors[ImGuiCol_TitleBgActive] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-			colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
-			colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-			colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
-			colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-			colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
-			colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
-			colors[ImGuiCol_CheckMark] = ImVec4(0.84f, 0.84f, 0.84f, 1.00f);
-			colors[ImGuiCol_SliderGrab] = ImVec4(0.43f, 0.43f, 0.43f, 1.00f);
-			colors[ImGuiCol_SliderGrabActive] = ImVec4(0.47f, 0.47f, 0.47f, 1.00f);
-			colors[ImGuiCol_Button] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-			colors[ImGuiCol_ButtonHovered] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
-			colors[ImGuiCol_ButtonActive] = ImVec4(0.45f, 0.45f, 0.45f, 1.00f);
-			colors[ImGuiCol_Header] = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);
-			colors[ImGuiCol_HeaderHovered] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
-			colors[ImGuiCol_HeaderActive] = ImVec4(0.24f, 0.24f, 0.24f, 1.00f);
-			colors[ImGuiCol_Separator] = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
-			colors[ImGuiCol_SeparatorHovered] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
-			colors[ImGuiCol_SeparatorActive] = ImVec4(0.22f, 0.22f, 0.22f, 1.00f);
-			colors[ImGuiCol_ResizeGrip] = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
-			colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.72f, 0.72f, 0.72f, 1.00f);
-			colors[ImGuiCol_ResizeGripActive] = ImVec4(0.77f, 0.77f, 0.77f, 1.00f);
-			colors[ImGuiCol_Tab] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
-			colors[ImGuiCol_TabHovered] = ImVec4(0.22f, 0.22f, 0.22f, 1.00f);
-			colors[ImGuiCol_TabActive] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-			colors[ImGuiCol_TabUnfocused] = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
-			colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
-			colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
-			colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
-			colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
-			colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
-			colors[ImGuiCol_TableHeaderBg] = ImVec4(0.19f, 0.19f, 0.20f, 1.00f);
-			colors[ImGuiCol_TableBorderStrong] = ImVec4(0.31f, 0.31f, 0.35f, 1.00f);
-			colors[ImGuiCol_TableBorderLight] = ImVec4(0.23f, 0.23f, 0.25f, 1.00f);
-			colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-			colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
-			colors[ImGuiCol_TextSelectedBg] = ImVec4(0.43f, 0.43f, 0.43f, 0.98f);
-			colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
-			colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-			colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
-			colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
-			colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
-		}
+		SetupImGuiStyle(io);
 
 		ImGui_ImplWin32_Init(creationParams.hFocusWindow);
 		ImGui_ImplDX9_Init(d3d9Device);
@@ -287,6 +236,9 @@ void KCTrainerIV::InitializeImGui(IDirect3DDevice9 *d3d9Device)
 	}
 }
 
+//------------------ End ImGui Setup ------------------/
+
+#ifdef DISABLED_CODE
 void KCTrainerIV::InitializeColors()
 {
 	for(uint32_t time = 0; time < NUM_HOURS; time++)
@@ -306,11 +258,20 @@ void KCTrainerIV::InitializeColors()
 		}
 	}
 }
+#endif
 
+//------------------ Loading/Saving ------------------/
+
+/// <summary>
+/// Save trainer settings to file, this is incomplete
+/// TODO Set this up
+/// </summary>
 void KCTrainerIV::SaveSettings()
 {
-	std::ofstream file("InGameTimecycSettings.bin", std::ios::binary);
+	// TODO Why is this .bin?
+	std::ofstream file("KCTrainerIV.bin", std::ios::binary);
 
+	// Make this do nothing if the file doesn't exist
 	if(!file.good())
 	{
 		return;
@@ -328,10 +289,16 @@ void KCTrainerIV::SaveSettings()
 	file.write((char*)&mItemInnerSpacing, sizeof(float));
 }
 
+/// <summary>
+/// Load trainer settings from file, this is incomplete
+/// TODO Set this up
+/// </summary>
 void KCTrainerIV::LoadSettings()
 {
-	std::ifstream file("InGameTimecycSettings.bin", std::ios::binary);
+	// TODO Why is this .bin?
+	std::ifstream file("KCTrainerIV.bin", std::ios::binary);
 
+	// Make this do nothing if the file doesn't exist
 	if(!file.good())
 	{
 		return;
@@ -347,21 +314,25 @@ void KCTrainerIV::LoadSettings()
 	file.read((char*)&mToggleCameraControlKey, sizeof(ImGuiKey));
 	file.read((char*)&mItemInnerSpacing, sizeof(float));
 
+	// If ImGui is initialized, set the mFontScale and mItemInnerSpacing variables.
 	if(mIsImGuiInitialized)
 	{
 		ImGui::GetIO().FontGlobalScale = mFontScale;
 		ImGui::GetStyle().ItemInnerSpacing.x = mItemInnerSpacing;
 	}
 
+	// Set the gamewindow, if not found exit.
 	HWND gameWindow = FindWindow(L"grcWindow", L"GTAIV");
 	if(!gameWindow)
 	{
 		return;
 	}
 
+	// Get the game rect, I think this is the window size.
 	RECT gameWindowRect = {};
 	GetWindowRect(gameWindow, &gameWindowRect);
 
+	// Set the window height and width variables
 	int32_t gameWindowWidth = gameWindowRect.right - gameWindowRect.left;
 	int32_t gameWindowHeight = gameWindowRect.bottom - gameWindowRect.top;
 
@@ -373,8 +344,19 @@ void KCTrainerIV::LoadSettings()
 	{
 		mWindowPos.y = 0.0f;
 	}
+	//
 }
 
+//------------------ End Loading/Saving ------------------/
+
+/// <summary>
+/// WndProc for ImGui usage, I'm quite sure this overrides the mouse in GTA IV.
+/// </summary>
+/// <param name="hWnd"></param>
+/// <param name="uMsg"></param>
+/// <param name="wParam"></param>
+/// <param name="lParam"></param>
+/// <returns></returns>
 bool KCTrainerIV::OnWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if(mIsImGuiInitialized)
@@ -388,6 +370,13 @@ bool KCTrainerIV::OnWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 	return false;
 }
 
+//------------------ Main ImGui update thread ------------------/
+
+/// <summary>
+/// Run all ImGui logic
+/// Check if the window open key is pressed, if so show/hide the ImGui window.
+/// Disable mouse control if ImGui is open.
+/// </summary>
 void KCTrainerIV::Update()
 {
 	static bool prevShowWindow = 0;
@@ -419,29 +408,37 @@ void KCTrainerIV::Update()
 			mDisableMouseControl = !mDisableMouseControl;
 		}
 
-		if(mLockTimeAndWeather)
-		{
-			*mHour = mSelectedHour;
-			*mMinutes = mSelectedMinutes;
+		
+		//if(mLockTimeAndWeather)
+		//{
+		//	*mHour = mSelectedHour;
+		//	*mMinutes = mSelectedMinutes;
 
-			FORCE_WEATHER_NOW(mSelectedWeather);
-		}
+		//	FORCE_WEATHER_NOW(mSelectedWeather);
+		//}
 	}
 	
 	bool windowWasJustClosed = prevShowWindow && !mShowWindow;
 	if(windowWasJustClosed)
 	{
-		RELEASE_WEATHER();
+		//RELEASE_WEATHER();
 		*mTimerLength = 2000;
 	}
 
 	bool windowWasJustOpened = !prevShowWindow && mShowWindow;
-	if(windowWasJustOpened && mLockTimeAndWeather)
+	//if(windowWasJustOpened && mLockTimeAndWeather)
+	if(windowWasJustOpened)
 	{
 		*mTimerLength = 30000;
 	}
 }
 
+//------------------ D3D9 Device ------------------/
+
+/// <summary>
+/// Initalize ImGui, and invalidate device objects for D3D9.
+/// </summary>
+/// <param name="d3d9Device"></param>
 void KCTrainerIV::OnBeforeD3D9DeviceReset(IDirect3DDevice9 *d3d9Device)
 {
 	InitializeImGui(d3d9Device);
@@ -449,11 +446,21 @@ void KCTrainerIV::OnBeforeD3D9DeviceReset(IDirect3DDevice9 *d3d9Device)
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 }
 
+/// <summary>
+/// Create ImGui device objects for D3D9.
+/// </summary>
 void KCTrainerIV::OnAfterD3D9DeviceReset()
 {
 	ImGui_ImplDX9_CreateDeviceObjects();
 }
 
+/// <summary>
+/// Initalize ImGui, update menu.
+/// Setup ImGui new frames.
+/// If mShowWindow is true, draw the ImGui window: DrawMainWindow();
+/// Also runs ImGui render.
+/// </summary>
+/// <param name="d3d9Device"></param>
 void KCTrainerIV::OnBeforeD3D9DeviceEndScene(IDirect3DDevice9 *d3d9Device)
 {
 	// I think this is a bad idea to run before the game is even started.
@@ -476,8 +483,6 @@ void KCTrainerIV::OnBeforeD3D9DeviceEndScene(IDirect3DDevice9 *d3d9Device)
 		// TODO Setup to disable mouse movement, stop the camera from constantly spinning if the menu is open.
 
 		// Oops, this just crashes the game..
-		//SET_PLAYER_CONTROL(playerPed, 0);
-
 		DrawMainWindow();
 		
 #ifdef DISABLED_CODE
@@ -489,15 +494,16 @@ void KCTrainerIV::OnBeforeD3D9DeviceEndScene(IDirect3DDevice9 *d3d9Device)
 #endif
 	}
 
+	// TODO Test this.
+	//EnablePlayerControl();
 		//SET_PLAYER_CONTROL(playerPed, 1);
-
-
-	
 
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 }
+
+//------------------ End D3D9 Device ------------------/
 
 
 /// <summary>
@@ -536,7 +542,7 @@ float GetPlayerHeading()
 
 /// <summary>
 /// Load vehicle model
-/// TODO Figure this out
+/// TODO Figure this out in IVSDK.
 /// </summary>
 /// <param name="modelHash"></param>
 void RequestModel(int modelHash)
@@ -556,6 +562,10 @@ void RequestModel(int modelHash)
 	}
 }
 
+/// <summary>
+/// Get the player char
+/// </summary>
+/// <returns>The player char as an int</returns>
 int GetPlayerChar()
 {
 	int playerPed;
@@ -563,6 +573,46 @@ int GetPlayerChar()
 	return playerPed;
 }
 
+/// <summary>
+/// Get the player ID
+/// TODO Test this
+/// </summary>
+/// <returns>The player ID as an int.</returns>
+int GetPlayerId()
+{
+	int playerId = GET_PLAYER_ID();
+	return playerId;
+}
+
+/// <summary>
+/// Enable the player movement and control.
+/// Check if the player isn't dead and is playing.
+/// </summary>
+void EnablePlayerControl()
+{
+	if (IS_PLAYER_PLAYING(GetPlayerId()))
+	{
+		SET_PLAYER_CONTROL(GetPlayerId(), true);
+	}
+}
+
+/// <summary>
+/// Disable the player movement and control.
+/// Check if the player isn't dead and is playing.
+/// </summary>
+void DisablePlayerControl()
+{
+	if (IS_PLAYER_PLAYING(GetPlayerId()))
+	{
+		SET_PLAYER_CONTROL(GetPlayerId(), false);
+	}
+	
+}
+
+/// <summary>
+/// Check if the player is in a vehicle.
+/// </summary>
+/// <returns>If the player is in a vehicle.</returns>
 bool IsPlayerInVehicle()
 {
 	int playerPed;
@@ -578,6 +628,10 @@ bool IsPlayerInVehicle()
 	return false;
 }
 
+/// <summary>
+/// Get the players current vehicle if they are in one.
+/// </summary>
+/// <returns>Players current vehicle, 0 if not in one.</returns>
 int GetPlayerVehicle()
 {
 	int playerVeh;
@@ -590,24 +644,29 @@ int GetPlayerVehicle()
 	return 0;
 }
 
-//int CurrentPlayerId()
-//{
-//	return CONVERT_INT_TO_PLAYERINDEX(GET_PLAYER_ID());
-//}
+/// <summary>
+/// Fade the screen out for the specified amount of time.
+/// </summary>
+/// <param name="ms">The time to fade out using miliseconds</param>
+void FadeScreenOut(int ms)
+{
+	DO_SCREEN_FADE_OUT(ms);
+}
 
-//int currentPlayerChar()
-//{
-//
-//}
-
-
-
+/// <summary>
+/// Fade the screen in for the specified amount of time.
+/// </summary>
+/// <param name="ms">The time to fade in using miliseconds</param>
+void FadeScreenIn(int ms)
+{
+	DO_SCREEN_FADE_IN(ms);
+}
 
 bool godMode = false;
 
 /// <summary>
 /// Draw all the player menu functions
-/// TODO Make this into KCNetIvImGui::DrawPlayerMenu or something
+/// TODO Make this into KCTrainerIV::DrawPlayerMenu or something
 /// </summary>
 void DrawPlayerMenu()
 {
@@ -688,7 +747,9 @@ void DrawPlayerMenu()
 
 bool warpIntoVehicle = false;
 /// <summary>
-/// Draw the vehicle menu, this is incomplete
+/// Draw the vehicle menu, this is incomplete.
+/// If doing vehicle functions, always check if player is in a vehicle.
+/// The game will freeze and crash if you don't check for the player being in a vehicle.
 /// </summary>
 void DrawVehicleMenu()
 {
@@ -717,6 +778,9 @@ void DrawVehicleMenu()
 			SET_CAR_HEALTH(playerVeh, 1000);
 			SET_ENGINE_HEALTH(playerVeh, 1000.0f);
 		}
+		else {
+			std::cout << "Not in a vehicle" << std::endl;
+		}
 		//if (IsPlayerInVehicle())
 		//{
 		//	//GET_PLAYERS_LAST_CAR_NO_SAVE(&playerVeh);
@@ -732,6 +796,32 @@ void DrawVehicleMenu()
 		}
 
 	}
+
+	// Extras, TODO Setup
+	/*
+	* Car lights
+	FORCE_CAR_LIGHTS
+	SET_VEH_HAZARDLIGHTS
+	SET_VEH_INDICATORLIGHTS
+
+	* Make vehicle strong
+	SET_CAR_STRONG
+	SET_VEH_HAS_STRONG_AXLES
+
+	SET_CAR_COLLISION
+
+	* Make vehicle not be able to be damaged
+	SET_CAR_CAN_BE_DAMAGED
+	SET_CAR_CAN_BE_VISIBLY_DAMAGED
+	SET_CAR_PROOFS
+	
+	SET_CAR_WATERTIGHT
+
+	SET_VEHICLE_DIRT_LEVEL
+	SET_CAR_VISIBLE
+
+	SET_CAR_AS_MISSION_CAR
+	*/
 
 	// These don't work yet, crashes the game.
 	// TODO Fix these to work.
@@ -755,6 +845,47 @@ void DrawVehicleMenu()
 	//	}
 	//	
 	//}
+}
+
+// Moved outside the draw menu, I think that breaks it.
+float posX, posY, posZ;
+float heading;
+
+/// <summary>
+/// Draw the teleport menu.
+/// </summary>
+void DrawTeleportMenu()
+{
+
+	// TODO Add a save option for saving current coordinates to a file.
+	ImGui::InputFloat("X: ", &posX);
+	ImGui::InputFloat("Y: ", &posY);
+	ImGui::InputFloat("Z: ", &posZ);
+
+	// This works for a basic teleporter
+	if (ImGui::Button("Teleport to coords"))
+	{
+		if (IS_PLAYER_PLAYING(GetPlayerId()))
+		{
+			// Check if the values are valid and not null
+			if (posX && posY && posZ)
+			{
+				//DO_SCREEN_FADE_OUT(500);
+				FadeScreenOut(500);
+
+				// Well this crashes it.
+				//LOAD_SCENE(posX, posY, posZ);
+
+				SET_CHAR_COORDINATES(GetPlayerChar(), posX, posY, posZ);
+				
+				//DO_SCREEN_FADE_IN(500);
+
+				FadeScreenIn(500);
+				
+			}
+		}
+	}
+
 }
 
 
@@ -799,8 +930,10 @@ void KCTrainerIV::DrawMainWindow()
 	//DISABLE_PAUSE_MENU(true);
 
 
-	
+	// Well, this works but it doesn't get turned off lol.
+	//SET_PLAYER_CONTROL(GetPlayerId(), false);
 
+	//DisablePlayerControl();
 
 	const char *timeOfDayNames[NUM_HOURS] = {"Midnight", "5AM", "6AM", "7AM", "9AM", "Midday", "18PM", "19PM", "20PM", "21PM", "22PM"};
 	const char *timeOfDayName = timeOfDayNames[mSelectedHourIndex];
@@ -826,6 +959,13 @@ void KCTrainerIV::DrawMainWindow()
 		// Vehicle
 		if (ImGui::BeginTabItem("Vehicle")) {
 			DrawVehicleMenu();
+
+			ImGui::EndTabItem();
+		}
+
+		// Teleport
+		if (ImGui::BeginTabItem("Teleport")) {
+			DrawTeleportMenu();
 
 			ImGui::EndTabItem();
 		}
