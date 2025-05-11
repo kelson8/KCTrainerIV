@@ -5134,7 +5134,10 @@ namespace Scripting
 	static void REQUEST_COLLISION_FOR_MODEL(unsigned int model) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_REQUEST_COLLISION_FOR_MODEL, model); }
 	static void REQUEST_INTERIOR_MODELS(unsigned int model, const char* interiorName) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_REQUEST_INTERIOR_MODELS, model, interiorName); }
 	static void REQUEST_IPL(const char* iplName) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_REQUEST_IPL, iplName); }
-	//static void REQUEST_MODEL(unsigned int model) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_REQUEST_MODEL, model); }
+
+	// I re-enabled this, it was commented out...
+	static void REQUEST_MODEL(unsigned int model) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_REQUEST_MODEL, model); }
+
 	static void REQUEST_STREAMED_TXD(const char* txdName, b8 unknown) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_REQUEST_STREAMED_TXD, txdName, unknown); }
 	static void SET_STATE_OF_CLOSEST_DOOR_OF_TYPE(unsigned int model, float x, float y, float z, int state, float Unk601) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_SET_STATE_OF_CLOSEST_DOOR_OF_TYPE, model, x, y, z, state, Unk601); }
 	static void SET_STREAMING_REQUEST_LIST_TIME(int time) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_SET_STREAMING_REQUEST_LIST_TIME, time); }
@@ -5697,7 +5700,10 @@ namespace Scripting
 	static void SETTIMERA(unsigned int value) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_SETTIMERA, value); }
 	static void SETTIMERB(unsigned int value) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_SETTIMERB, value); }
 	static void SETTIMERC(int Unk1088) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_SETTIMERC, Unk1088); }
-	//static void WAIT(int timeMS) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_WAIT, timeMS); }
+
+	// I enabled this wait in here, I'll use it instead of the other one.
+	static void WAIT(int timeMS) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_WAIT, timeMS); }
+	
 	static void ADD_PICKUP_TO_INTERIOR_ROOM_BY_KEY(Object pickup, unsigned int room_hash) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_ADD_PICKUP_TO_INTERIOR_ROOM_BY_KEY, pickup, room_hash); }
 	static void ADD_PICKUP_TO_INTERIOR_ROOM_BY_NAME(Pickup pickup, const char* roomName) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_ADD_PICKUP_TO_INTERIOR_ROOM_BY_NAME, pickup, roomName); }
 	static void CREATE_MONEY_PICKUP(float x, float y, float z, unsigned int amount, b8 unknownTrue, Pickup* pPickup) { NativeInvoke::Invoke< ScriptVoid>(NATIVE_CREATE_MONEY_PICKUP, x, y, z, amount, unknownTrue, pPickup); }

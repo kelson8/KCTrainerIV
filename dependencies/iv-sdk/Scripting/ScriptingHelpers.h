@@ -31,7 +31,8 @@ namespace Scripting
 
     static inline eModel GetModelHash(const ch *name) { return ScriptingHelpers::GetModelHash(name); }
 
-    static inline void Wait(u32 timeMS) { ScriptingHelpers::Wait(timeMS); }
+    // This one causes an error, I enabled it back in BaseScripting.h for a test.
+    //static inline void Wait(u32 timeMS) { ScriptingHelpers::Wait(timeMS); }
 
     static inline void TerminateThisScript() { ScriptingHelpers::TerminateThisScript(); }
 

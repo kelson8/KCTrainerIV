@@ -165,6 +165,8 @@ bool Initialize()
 
 			Log::Info("Created IDirectInputDevice8::Acquire hook");
 		}
+
+		Log::Info("KCNet ImGui IV started.");
 	}
 
 	if(!WndProcO)
