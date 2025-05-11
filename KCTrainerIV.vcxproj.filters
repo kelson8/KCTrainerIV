@@ -24,7 +24,7 @@
     <ClInclude Include="source\EmbeddedFont.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\TimecycEditor.h">
+    <ClInclude Include="source\KCTrainerIV.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\TimeCycle.h">
@@ -461,7 +461,7 @@
     <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\TimecycEditor.cpp">
+    <ClCompile Include="source\KCTrainerIV.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Timecycle.cpp">

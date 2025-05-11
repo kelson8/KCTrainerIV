@@ -1,7 +1,11 @@
 #define WIN32_LEAN_AND_MEAN
 
+// Credit to this project on GitHub for the original source: 
+// https://github.com/akifle47/InGameTimecycEditor
+
 #include <Windows.h>
-#include "TimecycEditor.h"
+//#include "TimecycEditor.h"
+#include "KCTrainerIV.h"
 #include "Log.h"
 
 std::ofstream Log::mLogFile;
@@ -21,7 +25,8 @@ DInput8DeviceAcquireT *DInput8DeviceAcquireO = nullptr;
 
 WNDPROC WndProcO = nullptr;
 
-TimecycEditor gTimecycEditor;
+//TimecycEditor gTimecycEditor;
+KCTrainerIV kcTrainerIV;
 
 HANDLE gMainThreadHandle = nullptr;
 
@@ -29,7 +34,7 @@ HANDLE gMainThreadHandle = nullptr;
 
 LRESULT CALLBACK WndProcH(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if(gTimecycEditor.OnWndProc(hWnd, uMsg, wParam, lParam))
+	if(kcTrainerIV.OnWndProc(hWnd, uMsg, wParam, lParam))
 		return true;
 	
 	return CallWindowProc(WndProcO, hWnd, uMsg, wParam, lParam);
@@ -37,18 +42,18 @@ LRESULT CALLBACK WndProcH(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
 HRESULT __stdcall D3D9DeviceResetH(IDirect3DDevice9 *This, D3DPRESENT_PARAMETERS *pPresentationParameters)
 {
-	gTimecycEditor.OnBeforeD3D9DeviceReset(This);
+	kcTrainerIV.OnBeforeD3D9DeviceReset(This);
 
 	HRESULT hr = D3D9DeviceResetO(This, pPresentationParameters);
 
-	gTimecycEditor.OnAfterD3D9DeviceReset();
+	kcTrainerIV.OnAfterD3D9DeviceReset();
 
 	return hr;
 }
 
 HRESULT APIENTRY D3D9DeviceEndSceneH(LPDIRECT3DDEVICE9 This)
 {
-	gTimecycEditor.OnBeforeD3D9DeviceEndScene(This);
+	kcTrainerIV.OnBeforeD3D9DeviceEndScene(This);
 
 	return D3D9DeviceEndSceneO(This);
 }
@@ -58,7 +63,7 @@ HRESULT __stdcall DInput8DeviceGetDeviceStateH(IDirectInputDevice8 *This, DWORD 
 {
 	HRESULT hr = DInput8DeviceGetDeviceStateO(This, cbData, lpvData);
 	
-	if(gTimecycEditor.mDisableMouseControl)
+	if(kcTrainerIV.mDisableMouseControl)
 	{
 		if(cbData == sizeof(DIMOUSESTATE) || cbData == sizeof(DIMOUSESTATE2))
 		{
@@ -71,7 +76,7 @@ HRESULT __stdcall DInput8DeviceGetDeviceStateH(IDirectInputDevice8 *This, DWORD 
 
 HRESULT __stdcall DInput8DeviceAcquireH(IDirectInputDevice8 *This)
 {
-	if(gTimecycEditor.mDisableMouseControl)
+	if(kcTrainerIV.mDisableMouseControl)
 	{
 		return DI_OK;
 	}
@@ -87,7 +92,7 @@ bool Initialize()
 	MH_STATUS mhStatus;
 	uint8_t *baseAddress = (uint8_t*)GetModuleHandle(NULL);
 
-	gTimecycEditor.Initialize(baseAddress);
+	kcTrainerIV.Initialize(baseAddress);
 
 	if(!*gD3D9Device_vtbl)
 	{
@@ -166,6 +171,7 @@ bool Initialize()
 			Log::Info("Created IDirectInputDevice8::Acquire hook");
 		}
 
+		//------------ Custom logging ------------//
 		Log::Info("KCNet ImGui IV started.");
 	}
 

@@ -7,7 +7,9 @@ class Log
 public:
 	static bool Initialize()
 	{
-		mLogFile.open("InGameTimecycLog.txt");
+		// 
+		//mLogFile.open("InGameTimecycLog.txt");
+		mLogFile.open("KCTrainerIV.log");
 		
 		if(!mLogFile)
 		{

@@ -17,7 +17,7 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-class TimecycEditor
+class KCTrainerIV
 {
 public:
 	void Initialize(const uint8_t *baseAddress);
@@ -40,13 +40,15 @@ private:
 	void LoadSettings();
 
 	void DrawMainWindow();
+
+#ifdef DISABLED_CODE
 	void DrawSaveWindow();
 	void DrawLoadWindow();
 	void DrawSettingsWindow();
-#ifdef DISABLED_CODE
 	void DrawSetParamForAllHoursAndWeathersWindow();
 #endif //DISABLED_CODE
 
+	// TODO Are these needed?
 	int32_t TimecycTimeIndexToGameTime(const int32_t timeIndex);
 	int32_t GameTimeToTimecycTimeIndex(const int32_t gameTime);
 
@@ -99,6 +101,7 @@ private:
 	bool mShowSetParamForAllHoursAndWeathersWindow = false;
 
 	//ImGuiKey mOpenWindowKey = ImGuiKey_F9;
+	// TODO Add a ini option for this key later.
 	ImGuiKey mOpenWindowKey = ImGuiKey_F5;
 	ImVec2 mWindowPos = ImVec2(5.0f, 5.0f);
 	ImVec2 mWindowSize = ImVec2(440.0f, 650.0f);

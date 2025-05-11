@@ -1,4 +1,10 @@
-#include "TimecycEditor.h"
+// Credit to this project on GitHub for the original source: 
+// https://github.com/akifle47/InGameTimecycEditor
+
+//#include "TimecycEditor.h"
+#include "KCTrainerIV.h"
+
+
 
 // IVSDK
 //#pragma comment(lib, "version.lib")
@@ -16,7 +22,8 @@
 
 #define IMGUIBUTTON ImGui::Button
 
-// TODO Set a good name for this project, possibly just KCNet-IV-ImGui
+// I renamed most variables and objects from TimecycEditor to KCTrainerIV, including in the header and main.cpp.
+
 
 
 // TODO Set this up with the IVSDK, make an ImGui test on GTA IV.
@@ -24,7 +31,7 @@
 
 using namespace Scripting;
 
-void TimecycEditor::Initialize(const uint8_t *baseAddress)
+void KCTrainerIV::Initialize(const uint8_t *baseAddress)
 {
 	int32_t gameVersion;
 	Utils::GetGameVersion(gameVersion);
@@ -164,7 +171,7 @@ void TimecycEditor::Initialize(const uint8_t *baseAddress)
 	mTimecycParamNameOffsetAndType[79] = {"Film Grain", 0x20C, TIMECYCPARAMTYPE_INT};
 }
 
-void TimecycEditor::InitializeImGui(IDirect3DDevice9 *d3d9Device)
+void KCTrainerIV::InitializeImGui(IDirect3DDevice9 *d3d9Device)
 {
 	if(!mIsImGuiInitialized)
 	{
@@ -280,7 +287,7 @@ void TimecycEditor::InitializeImGui(IDirect3DDevice9 *d3d9Device)
 	}
 }
 
-void TimecycEditor::InitializeColors()
+void KCTrainerIV::InitializeColors()
 {
 	for(uint32_t time = 0; time < NUM_HOURS; time++)
 	{
@@ -300,7 +307,7 @@ void TimecycEditor::InitializeColors()
 	}
 }
 
-void TimecycEditor::SaveSettings()
+void KCTrainerIV::SaveSettings()
 {
 	std::ofstream file("InGameTimecycSettings.bin", std::ios::binary);
 
@@ -321,7 +328,7 @@ void TimecycEditor::SaveSettings()
 	file.write((char*)&mItemInnerSpacing, sizeof(float));
 }
 
-void TimecycEditor::LoadSettings()
+void KCTrainerIV::LoadSettings()
 {
 	std::ifstream file("InGameTimecycSettings.bin", std::ios::binary);
 
@@ -368,7 +375,7 @@ void TimecycEditor::LoadSettings()
 	}
 }
 
-bool TimecycEditor::OnWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+bool KCTrainerIV::OnWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if(mIsImGuiInitialized)
 	{
@@ -381,7 +388,7 @@ bool TimecycEditor::OnWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	return false;
 }
 
-void TimecycEditor::Update()
+void KCTrainerIV::Update()
 {
 	static bool prevShowWindow = 0;
 	prevShowWindow = mShowWindow;
@@ -435,19 +442,19 @@ void TimecycEditor::Update()
 	}
 }
 
-void TimecycEditor::OnBeforeD3D9DeviceReset(IDirect3DDevice9 *d3d9Device)
+void KCTrainerIV::OnBeforeD3D9DeviceReset(IDirect3DDevice9 *d3d9Device)
 {
 	InitializeImGui(d3d9Device);
 
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 }
 
-void TimecycEditor::OnAfterD3D9DeviceReset()
+void KCTrainerIV::OnAfterD3D9DeviceReset()
 {
 	ImGui_ImplDX9_CreateDeviceObjects();
 }
 
-void TimecycEditor::OnBeforeD3D9DeviceEndScene(IDirect3DDevice9 *d3d9Device)
+void KCTrainerIV::OnBeforeD3D9DeviceEndScene(IDirect3DDevice9 *d3d9Device)
 {
 	// I think this is a bad idea to run before the game is even started.
 	//int playerPed;
@@ -780,7 +787,7 @@ void DrawAboutMenu()
 
 }
 
-void TimecycEditor::DrawMainWindow()
+void KCTrainerIV::DrawMainWindow()
 {
 
 	//int playerPed;
@@ -899,7 +906,11 @@ void TimecycEditor::DrawMainWindow()
 	ImGui::End();
 }
 
-void TimecycEditor::DrawSaveWindow()
+
+// Leaving these in place for references, I can possibly use it later.
+// Original TimecycEditor code
+#ifdef DISABLED_CODE
+void KCTrainerIV::DrawSaveWindow()
 {
 	if(mShowSaveWindow)
 	{
@@ -931,7 +942,7 @@ void TimecycEditor::DrawSaveWindow()
 	}
 }
 
-void TimecycEditor::DrawLoadWindow()
+void KCTrainerIV::DrawLoadWindow()
 {
 	if(mShowLoadWindow)
 	{
@@ -964,7 +975,7 @@ void TimecycEditor::DrawLoadWindow()
 	}
 }
 
-void TimecycEditor::DrawSettingsWindow()
+void KCTrainerIV::DrawSettingsWindow()
 {
 	if(mShowSettingsWindow)
 	{
@@ -1068,8 +1079,10 @@ void TimecycEditor::DrawSettingsWindow()
 	}
 }
 
+#endif //DISABLED_CODE
+
 #ifdef DISABLED_CODE
-void TimecycEditor::DrawSetParamForAllHoursAndWeathersWindow()
+void KCTrainerIV::DrawSetParamForAllHoursAndWeathersWindow()
 {
 	if(mShowSetParamForAllHoursAndWeathersWindow)
 	{
@@ -1187,13 +1200,13 @@ void TimecycEditor::DrawSetParamForAllHoursAndWeathersWindow()
 }
 #endif //DISABLED_CODE
 
-int32_t TimecycEditor::TimecycTimeIndexToGameTime(const int32_t timeIndex)
+int32_t KCTrainerIV::TimecycTimeIndexToGameTime(const int32_t timeIndex)
 {
 	const int32_t timecycTimeIndexToGameTime[NUM_HOURS] = {0, 5, 6, 7, 9, 12, 18, 19, 20, 21, 22};
 
 	return timecycTimeIndexToGameTime[timeIndex];
 }
-int32_t TimecycEditor::GameTimeToTimecycTimeIndex(const int32_t gameTime)
+int32_t KCTrainerIV::GameTimeToTimecycTimeIndex(const int32_t gameTime)
 {
 	const int32_t gameTimeToTimecycTimeIndex[24] = {0, 0, 0, 0, 0, 1, 2, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 7, 8, 9, 10, 10};
 
