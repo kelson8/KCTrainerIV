@@ -13,6 +13,12 @@ Future items for the project (I may add more to this list later.):
 * Ped spawner
 * Teleport list using a `KCTrainerTeleports.ini` file or something like that
 
+I have now changed the menu style to use the colors, style, and fonts from the Cheat Menu from user-grinch on GitHub: https://github.com/user-grinch/Cheat-Menu
+
+If the fonts are not found, this should fall back to the original fonts so it doesn't crash.
+
+To use the fonts, copy the fonts/cheat_menu.ttf to your GTA IV plugin directory, where the KCTrainerIV.asi is located.
+
 # Screenshots
 <details>
 <summary> Player Menu </summary>
@@ -59,6 +65,8 @@ Optional: Set description to Post-Build Event to whatever you want, I name mine 
 
 # Credit
 Credits to akifle47 on GitHub for the original InGameTimeCycEditor mod: https://github.com/akifle47/InGameTimecycEditor/
+
+Credits to user-grinch on GitHub and the Cheat Menu for GTA SA/VC/3 for the ImGui style, colors, and fonts: https://github.com/user-grinch/Cheat-Menu/
 
 # License
 This project is licensed under the MIT license.

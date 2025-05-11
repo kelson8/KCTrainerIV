@@ -32,9 +32,18 @@
 #include "Scripting/Scripting.h"
 #include "Hooks.h"
 
+// My headers
+#include "FileFunctions.h"
+
+// Variables
+std::string fontFile = "cheat_menu.ttf";
+
 #define IMGUIBUTTON ImGui::Button
 
+// These are required for some items.
 void EnablePlayerControl();
+
+void SetupImGuiStyle(ImGuiIO& io);
 
 // I renamed most variables and objects from TimecycEditor to KCTrainerIV, including in the header and main.cpp.
 
@@ -108,6 +117,61 @@ void KCTrainerIV::Initialize(const uint8_t *baseAddress)
 //------------------ ImGui Setup ------------------/
 
 /// <summary>
+/// Setup the imgui fonts
+/// </summary>
+/// <param name="io"></param>
+void
+SetupFonts(ImGuiIO& io)
+{
+	float fontScale = 1.0f;
+	io.Fonts->AddFontDefault();
+
+	// First, attempt to load the cheat menu font file
+	if (FileFunctions::DoesFileExist(fontFile))
+	{
+		io.Fonts->AddFontFromFileTTF(fontFile.c_str(), 1.15f);
+	}
+	// Fall back to loading built in fonts if the file isn't found, I would rather this not just crash.
+	else 
+	{
+		ImFontConfig conf = {};
+		conf.SizePixels = 13;
+		conf.OversampleH = 2;
+		conf.OversampleV = 2;
+
+		static const ImWchar ranges[] =
+		{
+			0x0020, 0x00FF, // Basic Latin + Latin Supplement
+			0,
+		};
+		const ImWchar* glyph_ranges = ranges;
+
+		io.Fonts->AddFontFromMemoryCompressedBase85TTF(gCousineRegularCompressedDataBase85, conf.SizePixels, &conf, glyph_ranges);
+		io.FontGlobalScale = fontScale;
+	}
+	
+}
+
+/// <summary>
+/// Setup the ImGui context
+/// </summary>
+void
+SetupContext()
+{
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	(void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+
+	SetupImGuiStyle(io);
+
+	SetupFonts(io);
+}
+
+
+/// <summary>
 /// Setup the ImGui style
 /// </summary>
 /// <param name="io">The IO for ImGui</param>
@@ -140,6 +204,74 @@ void SetupImGuiStyle(ImGuiIO &io)
 	}
 	//ImGui Color
 	{
+#define NEW_COLORS
+		// Colors/Style from Cheat Menu: 
+		// Credit to user-grinch on github for the style code here.
+		// https://github.com/user-grinch/Cheat-Menu/blob/master/src/cheatmenu.cpp#L271-L335
+#ifdef NEW_COLORS
+		ImGuiStyle* style = &ImGui::GetStyle();
+		ImVec4* colors = style->Colors;
+
+		style->WindowPadding = ImVec2(8, 8);
+		style->WindowRounding = 5.0f;
+		style->FramePadding = ImVec2(8, 8);
+		style->FrameRounding = 5.0f;
+		style->PopupRounding = 5.0f;
+		style->ItemSpacing = ImVec2(7, 7);
+		style->ItemInnerSpacing = ImVec2(7, 7);
+		style->IndentSpacing = 25.0f;
+		style->ScrollbarSize = 12.0f;
+		style->ScrollbarRounding = 10.0f;
+		style->GrabMinSize = 5.0f;
+		style->GrabRounding = 3.0f;
+
+		style->ChildBorderSize = 0;
+		style->WindowBorderSize = 0;
+		style->FrameBorderSize = 0;
+		style->TabBorderSize = 0;
+		style->PopupBorderSize = 0;
+
+		style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
+		style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.35f, 0.33f, 0.3f, 1.00f);
+		style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.06f, 0.95f);
+		style->Colors[ImGuiCol_ChildBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+		style->Colors[ImGuiCol_PopupBg] = ImVec4(0.06f, 0.05f, 0.06f, 0.95f);
+		style->Colors[ImGuiCol_Border] = ImVec4(0.12f, 0.12f, 0.12f, 1.0f);
+		style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+		style->Colors[ImGuiCol_FrameBg] = ImVec4(0.15f, 0.15f, 0.15f, 0.95f);
+		style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+		style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+		style->Colors[ImGuiCol_TitleBg] = ImVec4(0.12f, 0.12f, 0.12f, 0.94f);
+		style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 0.98f, 0.95f, 0.75f);
+		style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+		style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.15f, 0.15f, 0.15f, 0.95f);
+		style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.15f, 0.15f, 0.15f, 0.95f);
+		style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.5f, 0.5f, 0.5f, 0.3f);
+		style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.7f, 0.7f, 0.7f, 0.3f);
+		style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.9f, 0.9f, 0.9f, 0.3f);
+		style->Colors[ImGuiCol_CheckMark] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+		style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+		style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+		style->Colors[ImGuiCol_Separator] = ImVec4(0.15f, 0.15f, 0.15f, 0.95f);
+		style->Colors[ImGuiCol_Button] = ImVec4(0.15f, 0.15f, 0.15f, 0.95f);
+		style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+		style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+		style->Colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.15f, 0.15f, 0.95f);
+		style->Colors[ImGuiCol_TabHovered] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+		style->Colors[ImGuiCol_TabActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+		style->Colors[ImGuiCol_Header] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+		style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+		style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+		style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.12f, 0.12f, 0.12f, 0.00f);
+		style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+		style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+		style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+		style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+		style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+		style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+		style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.06f, 0.05f, 0.06f, 0.95f);
+		style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.6f);
+#else
 		ImVec4* colors = ImGui::GetStyle().Colors;
 		colors[ImGuiCol_Text] = ImVec4(0.94f, 0.94f, 0.94f, 1.00f);
 		colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
@@ -194,6 +326,7 @@ void SetupImGuiStyle(ImGuiIO &io)
 		colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
 		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
 		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+#endif
 	}
 }
 
@@ -208,29 +341,11 @@ void KCTrainerIV::InitializeImGui(IDirect3DDevice9 *d3d9Device)
 		D3DDEVICE_CREATION_PARAMETERS creationParams;
 		d3d9Device->GetCreationParameters(&creationParams);
 
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		ImGuiIO &io = ImGui::GetIO(); (void)io;
-
-		SetupImGuiStyle(io);
+		// Oops, I forgot this.
+		SetupContext();
 
 		ImGui_ImplWin32_Init(creationParams.hFocusWindow);
 		ImGui_ImplDX9_Init(d3d9Device);
-
-		ImFontConfig conf = {};
-		conf.SizePixels = 13;
-		conf.OversampleH = 2;
-		conf.OversampleV = 2;
-
-		static const ImWchar ranges[] =
-		{
-			0x0020, 0x00FF, // Basic Latin + Latin Supplement
-			0,
-		};
-		const ImWchar* glyph_ranges = ranges;
-
-		io.Fonts->AddFontFromMemoryCompressedBase85TTF(gCousineRegularCompressedDataBase85, conf.SizePixels, &conf, glyph_ranges);
-		io.FontGlobalScale = mFontScale;
 
 		mIsImGuiInitialized = true;
 	}
@@ -940,13 +1055,14 @@ void KCTrainerIV::DrawMainWindow()
 	const char *weatherNames[NUM_WEATHERS - 1] = {"EXTRASUNNY", "SUNNY", "SUNNY_WINDY", "CLOUDY", "RAIN", "DRIZZLE", "FOGGY", "LIGHTNING"};
 	const char *weatherName = weatherNames[mSelectedWeather];
 
-	ImGui::Begin("KCNet IV ImGui", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus);
+	ImGui::Begin("KCNet Trainer IV", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus);
 	ImGui::SetWindowPos(mWindowPos);
 	ImGui::SetWindowSize(mWindowSize);
 
 
-	ImGui::Text("KCNet Test");
+	ImGui::Text("KCNet Trainer IV");
 
+	// Contains all the menu drawing logic, each menu is separated into it's own function to make this a bit neater.
 	if (ImGui::BeginTabBar("Functions")) {
 
 		// Player

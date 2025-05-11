@@ -20,6 +20,9 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 class KCTrainerIV
 {
+private:
+	static std::ofstream mTeleportIniFile;
+	static std::ofstream mConfigIniFile;
 public:
 	void Initialize(const uint8_t *baseAddress);
 

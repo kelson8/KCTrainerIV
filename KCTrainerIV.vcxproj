@@ -151,9 +151,16 @@
     <ClInclude Include="dependencies\iv-sdk\Scripting\Types.h" />
     <ClInclude Include="dependencies\iv-sdk\SkyDome.h" />
     <ClInclude Include="source\EmbeddedFont.h" />
+    <ClInclude Include="source\functions\FileFunctions.h" />
+    <ClInclude Include="source\functions\ImGuiSetup.h" />
+    <ClInclude Include="source\functions\IniFunctions.h" />
     <ClInclude Include="source\imgui_dx9_backend\imgui_impl_dx9_shader.h" />
     <ClInclude Include="source\Log.h" />
     <ClInclude Include="source\KCTrainerIV.h" />
+    <ClInclude Include="source\menus\AboutMenu.h" />
+    <ClInclude Include="source\menus\PlayerMenu.h" />
+    <ClInclude Include="source\menus\TestMenu.h" />
+    <ClInclude Include="source\menus\VehicleMenu.h" />
     <ClInclude Include="source\TimeCycle.h" />
     <ClInclude Include="source\Utils.h" />
   </ItemGroup>
@@ -164,9 +171,16 @@
     <ClCompile Include="dependencies\imgui\imgui_draw.cpp" />
     <ClCompile Include="dependencies\imgui\imgui_tables.cpp" />
     <ClCompile Include="dependencies\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="source\functions\FileFunctions.cpp" />
+    <ClCompile Include="source\functions\ImGuiSetup.cpp" />
+    <ClCompile Include="source\functions\IniFunctions.cpp" />
     <ClCompile Include="source\imgui_dx9_backend\imgui_impl_dx9_shader.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\KCTrainerIV.cpp" />
+    <ClCompile Include="source\menus\AboutMenu.cpp" />
+    <ClCompile Include="source\menus\PlayerMenu.cpp" />
+    <ClCompile Include="source\menus\TestMenu.cpp" />
+    <ClCompile Include="source\menus\VehicleMenu.cpp" />
     <ClCompile Include="source\Timecycle.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -224,7 +238,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\imgui;$(SolutionDir)dependencies\minhook\include;$(SolutionDir)dependencies\minidx9\include;$(SolutionDir)dependencies\iv-sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\imgui;$(SolutionDir)dependencies\minhook\include;$(SolutionDir)dependencies\minidx9\include;$(SolutionDir)dependencies\iv-sdk;$(SolutionDir)dependencies\mINI\src\mini;$(SolutionDir)\source\functions;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -234,6 +248,10 @@
       <Version>1.21</Version>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies\minidx9\Lib\x86;$(SolutionDir)dependencies\minhook\build\VC22\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(SolutionDir)build\$(Configuration)\bin\KCTrainerIV.*" "C:\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto IV\GTAIV\plugins"</Command>
+      <Message>Copy dll to GTA IV plugins directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

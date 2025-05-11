@@ -19,11 +19,26 @@
     <Filter Include="Header Files\lib\iv-sdk">
       <UniqueIdentifier>{96a6e8cf-9acb-4466-9091-0caeeddb0d5a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\menus">
+      <UniqueIdentifier>{764c548c-1813-41cd-b3c4-4c6e2389f73d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\functions">
+      <UniqueIdentifier>{4462f45e-013e-4b8f-aed3-0d029c5c340f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\menus">
+      <UniqueIdentifier>{7c54a987-3366-4d9c-8026-89bc00b8a632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\imgui">
+      <UniqueIdentifier>{2e67b998-6090-4e1d-8dc2-5cb4472e8015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\imgui">
+      <UniqueIdentifier>{869bba53-27dd-4cd1-bb51-89351d64b4fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\functions">
+      <UniqueIdentifier>{dcc3173a-308b-493c-85f7-cb1541d8ad3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\EmbeddedFont.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\KCTrainerIV.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -34,30 +49,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\Log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\imgui_dx9_backend\imgui_impl_dx9_shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\imgui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\imgui\imconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\imgui\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\imgui\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\imgui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\imgui\imstb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_win32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\iv-sdk\audRadioAudioEntity.h">
@@ -456,6 +447,54 @@
     <ClInclude Include="dependencies\iv-sdk\audEngine.h">
       <Filter>Header Files\lib\iv-sdk</Filter>
     </ClInclude>
+    <ClInclude Include="source\menus\AboutMenu.h">
+      <Filter>Header Files\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="source\menus\PlayerMenu.h">
+      <Filter>Header Files\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="source\menus\TestMenu.h">
+      <Filter>Header Files\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="source\menus\VehicleMenu.h">
+      <Filter>Header Files\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imconfig.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imgui.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\imgui_dx9_backend\imgui_impl_dx9_shader.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_win32.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imgui_internal.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imstb_rectpack.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imstb_textedit.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imstb_truetype.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EmbeddedFont.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\functions\ImGuiSetup.h">
+      <Filter>Header Files\functions</Filter>
+    </ClInclude>
+    <ClInclude Include="source\functions\IniFunctions.h">
+      <Filter>Header Files\functions</Filter>
+    </ClInclude>
+    <ClInclude Include="source\functions\FileFunctions.h">
+      <Filter>Header Files\functions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -467,26 +506,47 @@
     <ClCompile Include="source\Timecycle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\imgui_dx9_backend\imgui_impl_dx9_shader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\menus\AboutMenu.cpp">
+      <Filter>Source Files\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menus\PlayerMenu.cpp">
+      <Filter>Source Files\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menus\TestMenu.cpp">
+      <Filter>Source Files\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menus\VehicleMenu.cpp">
+      <Filter>Source Files\menus</Filter>
     </ClCompile>
     <ClCompile Include="dependencies\imgui\imgui.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\imgui</Filter>
     </ClCompile>
     <ClCompile Include="dependencies\imgui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\imgui</Filter>
     </ClCompile>
     <ClCompile Include="dependencies\imgui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="dependencies\imgui\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dependencies\imgui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="source\imgui_dx9_backend\imgui_impl_dx9_shader.cpp">
+      <Filter>Source Files\imgui</Filter>
     </ClCompile>
     <ClCompile Include="dependencies\imgui\backends\imgui_impl_win32.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_tables.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\functions\ImGuiSetup.cpp">
+      <Filter>Source Files\functions</Filter>
+    </ClCompile>
+    <ClCompile Include="source\functions\IniFunctions.cpp">
+      <Filter>Source Files\functions</Filter>
+    </ClCompile>
+    <ClCompile Include="source\functions\FileFunctions.cpp">
+      <Filter>Source Files\functions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
